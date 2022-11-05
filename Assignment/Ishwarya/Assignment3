@@ -1,0 +1,209 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+df=pd.read_csv('abalone.csv')
+df.head()
+Sex	Length	Diameter	Height	Whole weight	Shucked weight	Viscera weight	Shell weight	Rings
+0	M	0.455	0.365	0.095	0.5140	0.2245	0.1010	0.150	15
+1	M	0.350	0.265	0.090	0.2255	0.0995	0.0485	0.070	7
+2	F	0.530	0.420	0.135	0.6770	0.2565	0.1415	0.210	9
+3	M	0.440	0.365	0.125	0.5160	0.2155	0.1140	0.155	10
+4	I	0.330	0.255	0.080	0.2050	0.0895	0.0395	0.055	7
+sns.distplot(df.Height)
+C:\Users\gayat\anaconda3\lib\site-packages\seaborn\distributions.py:2619: FutureWarning: `distplot` is a deprecated function and will be removed in a future version. Please adapt your code to use either `displot` (a figure-level function with similar flexibility) or `histplot` (an axes-level function for histograms).
+  warnings.warn(msg, FutureWarning)
+
+var='Whole weight'
+sns.distplot(df[var])
+C:\Users\gayat\anaconda3\lib\site-packages\seaborn\distributions.py:2619: FutureWarning: `distplot` is a deprecated function and will be removed in a future version. Please adapt your code to use either `displot` (a figure-level function with similar flexibility) or `histplot` (an axes-level function for histograms).
+  warnings.warn(msg, FutureWarning)
+
+var='Shucked weight'
+sns.histplot(df[var])
+
+var='Viscera weight'
+sns.histplot(df[var])
+
+var='Shell weight'
+sns.histplot(df[var])
+
+df['age'] = df.Rings + 1.5
+df.drop('Rings', axis=1, inplace=True)
+df.head()
+Sex	Length	Diameter	Height	Whole weight	Shucked weight	Viscera weight	Shell weight	age
+0	M	0.455	0.365	0.095	0.5140	0.2245	0.1010	0.150	16.5
+1	M	0.350	0.265	0.090	0.2255	0.0995	0.0485	0.070	8.5
+2	F	0.530	0.420	0.135	0.6770	0.2565	0.1415	0.210	10.5
+3	M	0.440	0.365	0.125	0.5160	0.2155	0.1140	0.155	11.5
+4	I	0.330	0.255	0.080	0.2050	0.0895	0.0395	0.055	8.5
+var1='age'
+var2='Diameter'
+sns.lineplot(df[var1],df[var2])
+C:\Users\gayat\anaconda3\lib\site-packages\seaborn\_decorators.py:36: FutureWarning: Pass the following variables as keyword args: x, y. From version 0.12, the only valid positional argument will be `data`, and passing other arguments without an explicit keyword will result in an error or misinterpretation.
+  warnings.warn(
+
+var1='age'
+var2='Height'
+sns.lineplot(df[var1],df[var2])
+C:\Users\gayat\anaconda3\lib\site-packages\seaborn\_decorators.py:36: FutureWarning: Pass the following variables as keyword args: x, y. From version 0.12, the only valid positional argument will be `data`, and passing other arguments without an explicit keyword will result in an error or misinterpretation.
+  warnings.warn(
+
+var1='age'
+var2='Whole weight'
+sns.lineplot(df[var1],df[var2])
+C:\Users\gayat\anaconda3\lib\site-packages\seaborn\_decorators.py:36: FutureWarning: Pass the following variables as keyword args: x, y. From version 0.12, the only valid positional argument will be `data`, and passing other arguments without an explicit keyword will result in an error or misinterpretation.
+  warnings.warn(
+
+var1='age'
+var2='Shucked weight'
+sns.lineplot(df[var1],df[var2])
+C:\Users\gayat\anaconda3\lib\site-packages\seaborn\_decorators.py:36: FutureWarning: Pass the following variables as keyword args: x, y. From version 0.12, the only valid positional argument will be `data`, and passing other arguments without an explicit keyword will result in an error or misinterpretation.
+  warnings.warn(
+
+var1='age'
+var2='Viscera weight'
+sns.lineplot(df[var1],df[var2])
+C:\Users\gayat\anaconda3\lib\site-packages\seaborn\_decorators.py:36: FutureWarning: Pass the following variables as keyword args: x, y. From version 0.12, the only valid positional argument will be `data`, and passing other arguments without an explicit keyword will result in an error or misinterpretation.
+  warnings.warn(
+
+var1='age'
+var2='Shell weight'
+sns.scatterplot(df[var1],df[var2])
+C:\Users\gayat\anaconda3\lib\site-packages\seaborn\_decorators.py:36: FutureWarning: Pass the following variables as keyword args: x, y. From version 0.12, the only valid positional argument will be `data`, and passing other arguments without an explicit keyword will result in an error or misinterpretation.
+  warnings.warn(
+
+df.hist(figsize=(16,16))
+array([[,
+        ,
+        ],
+       [,
+        ,
+        ],
+       [,
+        , ]],
+      dtype=object)
+
+plt.figure(figsize=(10,8))
+sns.heatmap(df.corr(),annot=True)
+
+df.describe()
+Length	Diameter	Height	Whole weight	Shucked weight	Viscera weight	Shell weight	age
+count	4177.000000	4177.000000	4177.000000	4177.000000	4177.000000	4177.000000	4177.000000	4177.000000
+mean	0.523992	0.407881	0.139516	0.828742	0.359367	0.180594	0.238831	11.433684
+std	0.120093	0.099240	0.041827	0.490389	0.221963	0.109614	0.139203	3.224169
+min	0.075000	0.055000	0.000000	0.002000	0.001000	0.000500	0.001500	2.500000
+25%	0.450000	0.350000	0.115000	0.441500	0.186000	0.093500	0.130000	9.500000
+50%	0.545000	0.425000	0.140000	0.799500	0.336000	0.171000	0.234000	10.500000
+75%	0.615000	0.480000	0.165000	1.153000	0.502000	0.253000	0.329000	12.500000
+max	0.815000	0.650000	1.130000	2.825500	1.488000	0.760000	1.005000	30.500000
+df.isnull().sum()
+Sex               0
+Length            0
+Diameter          0
+Height            0
+Whole weight      0
+Shucked weight    0
+Viscera weight    0
+Shell weight      0
+age               0
+dtype: int64
+numerical_features = ["Length", 'Diameter', 'Height','Whole weight','Shucked weight', 'Viscera weight', 'Shell weight']
+categorical_feature = "Sex"
+features = numerical_features + [categorical_feature]
+target = 'age'
+fig, axes = plt.subplots(4,2,figsize=(16, 16))
+axes = np.ravel(axes)
+
+for i, c in enumerate(numerical_features):
+    hist = df[c].plot(kind = 'box', ax=axes[i], vert=True)
+    axes[i].set_title(c, fontsize=15)
+    
+plt.tight_layout()
+plt.show()
+
+q1=df.Length.quantile(0.25)
+q3=df.Length.quantile(0.75)
+IQR=q3-q1
+lower_limit= q1-IQR
+df.median()
+C:\Users\gayat\AppData\Local\Temp\ipykernel_15656\1328674543.py:5: FutureWarning: Dropping of nuisance columns in DataFrame reductions (with 'numeric_only=None') is deprecated; in a future version this will raise TypeError.  Select only valid columns before calling the reduction.
+  df.median()
+Length             0.5450
+Diameter           0.4250
+Height             0.1400
+Whole weight       0.7995
+Shucked weight     0.3360
+Viscera weight     0.1710
+Shell weight       0.2340
+age               10.5000
+dtype: float64
+df['Length']=np.where(df['Length']<lower_limit,0.545,df['Length'])
+sns.boxplot(df.Length)
+C:\Users\gayat\anaconda3\lib\site-packages\seaborn\_decorators.py:36: FutureWarning: Pass the following variable as a keyword arg: x. From version 0.12, the only valid positional argument will be `data`, and passing other arguments without an explicit keyword will result in an error or misinterpretation.
+  warnings.warn(
+
+df=pd.get_dummies(df,columns=['Sex'])
+df.head()
+Length	Diameter	Height	Whole weight	Shucked weight	Viscera weight	Shell weight	age	Sex_F	Sex_I	Sex_M
+0	0.455	0.365	0.095	0.5140	0.2245	0.1010	0.150	16.5	0	0	1
+1	0.350	0.265	0.090	0.2255	0.0995	0.0485	0.070	8.5	0	0	1
+2	0.530	0.420	0.135	0.6770	0.2565	0.1415	0.210	10.5	1	0	0
+3	0.440	0.365	0.125	0.5160	0.2155	0.1140	0.155	11.5	0	0	1
+4	0.330	0.255	0.080	0.2050	0.0895	0.0395	0.055	8.5	0	1	0
+y = df['age'].values
+x=df.drop(columns=['age'],axis=1)
+x.head()
+Length	Diameter	Height	Whole weight	Shucked weight	Viscera weight	Shell weight	Sex_F	Sex_I	Sex_M
+0	0.455	0.365	0.095	0.5140	0.2245	0.1010	0.150	0	0	1
+1	0.350	0.265	0.090	0.2255	0.0995	0.0485	0.070	0	0	1
+2	0.530	0.420	0.135	0.6770	0.2565	0.1415	0.210	1	0	0
+3	0.440	0.365	0.125	0.5160	0.2155	0.1140	0.155	0	0	1
+4	0.330	0.255	0.080	0.2050	0.0895	0.0395	0.055	0	1	0
+from sklearn.preprocessing import scale
+x_scaled=pd.DataFrame(scale(x),columns=x.columns)
+x_scaled.head()
+Length	Diameter	Height	Whole weight	Shucked weight	Viscera weight	Shell weight	Sex_F	Sex_I	Sex_M
+0	-0.815810	-0.432149	-1.064424	-0.641898	-0.607685	-0.726212	-0.638217	-0.674834	-0.688018	1.316677
+1	-1.848010	-1.439929	-1.183978	-1.230277	-1.170910	-1.205221	-1.212987	-0.674834	-0.688018	1.316677
+2	-0.078524	0.122130	-0.107991	-0.309469	-0.463500	-0.356690	-0.207139	1.481846	-0.688018	-0.759488
+3	-0.963267	-0.432149	-0.347099	-0.637819	-0.648238	-0.607600	-0.602294	-0.674834	-0.688018	1.316677
+4	-2.044620	-1.540707	-1.423087	-1.272086	-1.215968	-1.287337	-1.320757	-0.674834	1.453451	-0.759488
+x_scaled.shape
+(4177, 10)
+from sklearn.model_selection import train_test_split
+x_train,x_test,y_train,y_test=train_test_split(x_scaled,y,test_size=0.2,random_state=2)
+x_train.shape,x_test.shape,y_train.shape,y_test.shape
+((3341, 10), (836, 10), (3341,), (836,))
+from sklearn import linear_model
+from sklearn.ensemble import RandomForestRegressor
+l_reg=linear_model.LinearRegression()
+model=l_reg.fit(x_train,y_train)
+r_tree=RandomForestRegressor(max_features=4, n_estimators=30)
+tree_model=r_tree.fit(x_train,y_train)
+prediction=model.predict(x_test)
+print("Prediction",prediction[0])
+print("Actual value",y_test[0])
+Prediction 10.568269099889253
+Actual value 12.5
+prediction=tree_model.predict(x_test)
+print("Prediction",prediction[0])
+print("Actual value",y_test[0])
+Prediction 10.2
+Actual value 12.5
+from sklearn.metrics import mean_squared_error
+print("Train: ", np.sqrt(mean_squared_error(y_train, model.predict(x_train))))
+print("Test: ", np.sqrt(mean_squared_error(y_test, model.predict(x_test))))
+Train:  2.1327576157621926
+Test:  2.3895309527868758
+print("Train: ", np.sqrt(mean_squared_error(y_train, tree_model.predict(x_train))))
+print("Test: ", np.sqrt(mean_squared_error(y_test, tree_model.predict(x_test))))
+Train:  0.8409111708891432
+Test:  2.3074066536217877
+y_pred = tree_model.predict(x_test)
+
+fig = plt.figure(figsize=(10, 6))
+plt.scatter(range(y_test.shape[0]), y_test, color='red', label='y_true')
+plt.scatter(range(y_test.shape[0]), y_pred, color='blue', label='y_pred')
+plt.legend()
+plt.show()
