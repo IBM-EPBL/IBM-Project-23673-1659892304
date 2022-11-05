@@ -1,0 +1,186 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+from matplotlib import rcParams
+Load the Dataset
+df=pd.read_csv('C:\\Users\\gayat\\Desktop\\Nalaiya Thiran Lab\\Assignment 2\\Churn_Modelling.csv')
+df.head()
+RowNumber	CustomerId	Surname	CreditScore	Geography	Gender	Age	Tenure	Balance	NumOfProducts	HasCrCard	IsActiveMember	EstimatedSalary	Exited
+0	1	15634602	Hargrave	619	France	Female	42	2	0.00	1	1	1	101348.88	1
+1	2	15647311	Hill	608	Spain	Female	41	1	83807.86	1	0	1	112542.58	0
+2	3	15619304	Onio	502	France	Female	42	8	159660.80	3	1	0	113931.57	1
+3	4	15701354	Boni	699	France	Female	39	1	0.00	2	0	0	93826.63	0
+4	5	15737888	Mitchell	850	Spain	Female	43	2	125510.82	1	1	1	79084.10	0
+Perform Visualizations
+#Univariate Analysis
+sns.distplot(df.CreditScore)
+C:\Users\gayat\anaconda3\lib\site-packages\seaborn\distributions.py:2619: FutureWarning: `distplot` is a deprecated function and will be removed in a future version. Please adapt your code to use either `displot` (a figure-level function with similar flexibility) or `histplot` (an axes-level function for histograms).
+  warnings.warn(msg, FutureWarning)
+
+#Univariate Analysis
+sns.displot(df.Age)
+
+#Bivariate Analysis
+sns.lineplot(df.CreditScore,df.EstimatedSalary)
+C:\Users\gayat\anaconda3\lib\site-packages\seaborn\_decorators.py:36: FutureWarning: Pass the following variables as keyword args: x, y. From version 0.12, the only valid positional argument will be `data`, and passing other arguments without an explicit keyword will result in an error or misinterpretation.
+  warnings.warn(
+
+#Bivariate Analysis
+sns.scatterplot(df.CreditScore,df.EstimatedSalary)
+C:\Users\gayat\anaconda3\lib\site-packages\seaborn\_decorators.py:36: FutureWarning: Pass the following variables as keyword args: x, y. From version 0.12, the only valid positional argument will be `data`, and passing other arguments without an explicit keyword will result in an error or misinterpretation.
+  warnings.warn(
+
+#Multivariate Analysis
+df.hist(figsize=(16,16))
+array([[,
+        ,
+        ],
+       [,
+        ,
+        ],
+       [,
+        ,
+        ],
+       [,
+        , ]],
+      dtype=object)
+
+Descriptive Statistics
+df.describe()
+RowNumber	CustomerId	CreditScore	Age	Tenure	Balance	NumOfProducts	HasCrCard	IsActiveMember	EstimatedSalary	Exited
+count	10000.00000	1.000000e+04	10000.000000	10000.000000	10000.000000	10000.000000	10000.000000	10000.00000	10000.000000	10000.000000	10000.000000
+mean	5000.50000	1.569094e+07	650.528800	38.921800	5.012800	76485.889288	1.530200	0.70550	0.515100	100090.239881	0.203700
+std	2886.89568	7.193619e+04	96.653299	10.487806	2.892174	62397.405202	0.581654	0.45584	0.499797	57510.492818	0.402769
+min	1.00000	1.556570e+07	350.000000	18.000000	0.000000	0.000000	1.000000	0.00000	0.000000	11.580000	0.000000
+25%	2500.75000	1.562853e+07	584.000000	32.000000	3.000000	0.000000	1.000000	0.00000	0.000000	51002.110000	0.000000
+50%	5000.50000	1.569074e+07	652.000000	37.000000	5.000000	97198.540000	1.000000	1.00000	1.000000	100193.915000	0.000000
+75%	7500.25000	1.575323e+07	718.000000	44.000000	7.000000	127644.240000	2.000000	1.00000	1.000000	149388.247500	0.000000
+max	10000.00000	1.581569e+07	850.000000	92.000000	10.000000	250898.090000	4.000000	1.00000	1.000000	199992.480000	1.000000
+Handle missing values
+df.isnull().any()
+RowNumber          False
+CustomerId         False
+Surname            False
+CreditScore        False
+Geography          False
+Gender             False
+Age                False
+Tenure             False
+Balance            False
+NumOfProducts      False
+HasCrCard          False
+IsActiveMember     False
+EstimatedSalary    False
+Exited             False
+dtype: bool
+Find and replace outliers
+sns.boxplot(df.CreditScore)
+C:\Users\gayat\anaconda3\lib\site-packages\seaborn\_decorators.py:36: FutureWarning: Pass the following variable as a keyword arg: x. From version 0.12, the only valid positional argument will be `data`, and passing other arguments without an explicit keyword will result in an error or misinterpretation.
+  warnings.warn(
+
+ df.shape
+(10000, 14)
+q1=df.CreditScore.quantile(0.25)
+q3=df.CreditScore.quantile(0.75)
+IQR=q3-q1
+lower_limit= q1 - 1.5*IQR
+lower_limit
+383.0
+df.median()
+C:\Users\gayat\AppData\Local\Temp\ipykernel_22524\530051474.py:1: FutureWarning: Dropping of nuisance columns in DataFrame reductions (with 'numeric_only=None') is deprecated; in a future version this will raise TypeError.  Select only valid columns before calling the reduction.
+  df.median()
+RowNumber          5.000500e+03
+CustomerId         1.569074e+07
+CreditScore        6.520000e+02
+Age                3.700000e+01
+Tenure             5.000000e+00
+Balance            9.719854e+04
+NumOfProducts      1.000000e+00
+HasCrCard          1.000000e+00
+IsActiveMember     1.000000e+00
+EstimatedSalary    1.001939e+05
+Exited             0.000000e+00
+dtype: float64
+df['CreditScore']=np.where(df['CreditScore']<lower_limit,652,df['CreditScore'])
+df.shape
+(10000, 14)
+sns.boxplot(df.CreditScore)
+C:\Users\gayat\anaconda3\lib\site-packages\seaborn\_decorators.py:36: FutureWarning: Pass the following variable as a keyword arg: x. From version 0.12, the only valid positional argument will be `data`, and passing other arguments without an explicit keyword will result in an error or misinterpretation.
+  warnings.warn(
+
+Check for categorical columns and perform encoding
+#Label encoding
+from sklearn.preprocessing import LabelEncoder
+le=LabelEncoder()
+df.Gender=le.fit_transform(df.Gender)
+df.head()
+RowNumber	CustomerId	Surname	CreditScore	Geography	Gender	Age	Tenure	Balance	NumOfProducts	HasCrCard	IsActiveMember	EstimatedSalary	Exited
+0	1	15634602	Hargrave	619	France	0	42	2	0.00	1	1	1	101348.88	1
+1	2	15647311	Hill	608	Spain	0	41	1	83807.86	1	0	1	112542.58	0
+2	3	15619304	Onio	502	France	0	42	8	159660.80	3	1	0	113931.57	1
+3	4	15701354	Boni	699	France	0	39	1	0.00	2	0	0	93826.63	0
+4	5	15737888	Mitchell	850	Spain	0	43	2	125510.82	1	1	1	79084.10	0
+#One hot encoding
+df=pd.get_dummies(df,columns=['Geography'])
+df.head()
+RowNumber	CustomerId	Surname	CreditScore	Gender	Age	Tenure	Balance	NumOfProducts	HasCrCard	IsActiveMember	EstimatedSalary	Exited	Geography_France	Geography_Germany	Geography_Spain
+0	1	15634602	Hargrave	619	0	42	2	0.00	1	1	1	101348.88	1	1	0	0
+1	2	15647311	Hill	608	0	41	1	83807.86	1	0	1	112542.58	0	0	0	1
+2	3	15619304	Onio	502	0	42	8	159660.80	3	1	0	113931.57	1	1	0	0
+3	4	15701354	Boni	699	0	39	1	0.00	2	0	0	93826.63	0	1	0	0
+4	5	15737888	Mitchell	850	0	43	2	125510.82	1	1	1	79084.10	0	0	0	1
+df=df.drop(columns=['Surname'],axis=1)
+df.head()
+RowNumber	CustomerId	CreditScore	Gender	Age	Tenure	Balance	NumOfProducts	HasCrCard	IsActiveMember	EstimatedSalary	Exited	Geography_France	Geography_Germany	Geography_Spain
+0	1	15634602	619	0	42	2	0.00	1	1	1	101348.88	1	1	0	0
+1	2	15647311	608	0	41	1	83807.86	1	0	1	112542.58	0	0	0	1
+2	3	15619304	502	0	42	8	159660.80	3	1	0	113931.57	1	1	0	0
+3	4	15701354	699	0	39	1	0.00	2	0	0	93826.63	0	1	0	0
+4	5	15737888	850	0	43	2	125510.82	1	1	1	79084.10	0	0	0	1
+Split the data into dependent and independent variables
+#dependent variable
+y=df['CreditScore']
+y
+0       619
+1       608
+2       502
+3       699
+4       850
+       ... 
+9995    771
+9996    516
+9997    709
+9998    772
+9999    792
+Name: CreditScore, Length: 10000, dtype: int64
+#independent variable
+x=df.drop(columns=['CreditScore'],axis=1)
+x.head()
+RowNumber	CustomerId	Gender	Age	Tenure	Balance	NumOfProducts	HasCrCard	IsActiveMember	EstimatedSalary	Exited	Geography_France	Geography_Germany	Geography_Spain
+0	1	15634602	0	42	2	0.00	1	1	1	101348.88	1	1	0	0
+1	2	15647311	0	41	1	83807.86	1	0	1	112542.58	0	0	0	1
+2	3	15619304	0	42	8	159660.80	3	1	0	113931.57	1	1	0	0
+3	4	15701354	0	39	1	0.00	2	0	0	93826.63	0	1	0	0
+4	5	15737888	0	43	2	125510.82	1	1	1	79084.10	0	0	0	1
+Scale the independent variables
+from sklearn.preprocessing import scale
+x_scaled=pd.DataFrame(scale(x),columns=x.columns)
+x_scaled.head()
+RowNumber	CustomerId	Gender	Age	Tenure	Balance	NumOfProducts	HasCrCard	IsActiveMember	EstimatedSalary	Exited	Geography_France	Geography_Germany	Geography_Spain
+0	-1.731878	-0.783213	-1.095988	0.293517	-1.041760	-1.225848	-0.911583	0.646092	0.970243	0.021886	1.977165	0.997204	-0.578736	-0.573809
+1	-1.731531	-0.606534	-1.095988	0.198164	-1.387538	0.117350	-0.911583	-1.547768	0.970243	0.216534	-0.505775	-1.002804	-0.578736	1.742740
+2	-1.731185	-0.995885	-1.095988	0.293517	1.032908	1.333053	2.527057	0.646092	-1.030670	0.240687	1.977165	0.997204	-0.578736	-0.573809
+3	-1.730838	0.144767	-1.095988	0.007457	-1.387538	-1.225848	0.807737	-1.547768	-1.030670	-0.108918	-0.505775	0.997204	-0.578736	-0.573809
+4	-1.730492	0.652659	-1.095988	0.388871	-1.041760	0.785728	-0.911583	0.646092	0.970243	-0.365276	-0.505775	-1.002804	-0.578736	1.742740
+Split the data into test and train
+from sklearn.model_selection import train_test_split
+x_train,x_test,y_train,y_test=train_test_split(x_scaled,y,test_size=0.3,random_state=0)
+x_train.shape
+(7000, 14)
+y_train.shape
+(7000,)
+x_test.shape
+(3000, 14)
+y_test.shape
+(3000,)
