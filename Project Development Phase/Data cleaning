@@ -1,0 +1,360 @@
+from google.colab import drive
+drive.mount('/content/drive')
+Mounted at /content/drive
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+import warnings
+warnings.filterwarnings('ignore')
+df=pd.read_csv(r'/content/drive/MyDrive/kidney_disease.csv')
+UNDERSTANDING THE DATASET
+
+print("The dataset shape is {}".format(df.shape))
+The dataset shape is (400, 26)
+df.head()
+id	age	bp	sg	al	su	rbc	pc	pcc	ba	...	pcv	wc	rc	htn	dm	cad	appet	pe	ane	classification
+0	0	48.0	80.0	1.020	1.0	0.0	NaN	normal	notpresent	notpresent	...	44	7800	5.2	yes	yes	no	good	no	no	ckd
+1	1	7.0	50.0	1.020	4.0	0.0	NaN	normal	notpresent	notpresent	...	38	6000	NaN	no	no	no	good	no	no	ckd
+2	2	62.0	80.0	1.010	2.0	3.0	normal	normal	notpresent	notpresent	...	31	7500	NaN	no	yes	no	poor	no	yes	ckd
+3	3	48.0	70.0	1.005	4.0	0.0	normal	abnormal	present	notpresent	...	32	6700	3.9	yes	no	no	poor	yes	yes	ckd
+4	4	51.0	80.0	1.010	2.0	0.0	normal	normal	notpresent	notpresent	...	35	7300	4.6	no	no	no	good	no	no	ckd
+5 rows × 26 columns
+
+df.columns
+Index(['id', 'age', 'bp', 'sg', 'al', 'su', 'rbc', 'pc', 'pcc', 'ba', 'bgr',
+       'bu', 'sc', 'sod', 'pot', 'hemo', 'pcv', 'wc', 'rc', 'htn', 'dm', 'cad',
+       'appet', 'pe', 'ane', 'classification'],
+      dtype='object')
+df.info()
+RangeIndex: 400 entries, 0 to 399
+Data columns (total 26 columns):
+ #   Column          Non-Null Count  Dtype  
+---  ------          --------------  -----  
+ 0   id              400 non-null    int64  
+ 1   age             391 non-null    float64
+ 2   bp              388 non-null    float64
+ 3   sg              353 non-null    float64
+ 4   al              354 non-null    float64
+ 5   su              351 non-null    float64
+ 6   rbc             248 non-null    object 
+ 7   pc              335 non-null    object 
+ 8   pcc             396 non-null    object 
+ 9   ba              396 non-null    object 
+ 10  bgr             356 non-null    float64
+ 11  bu              381 non-null    float64
+ 12  sc              383 non-null    float64
+ 13  sod             313 non-null    float64
+ 14  pot             312 non-null    float64
+ 15  hemo            348 non-null    float64
+ 16  pcv             330 non-null    object 
+ 17  wc              295 non-null    object 
+ 18  rc              270 non-null    object 
+ 19  htn             398 non-null    object 
+ 20  dm              398 non-null    object 
+ 21  cad             398 non-null    object 
+ 22  appet           399 non-null    object 
+ 23  pe              399 non-null    object 
+ 24  ane             399 non-null    object 
+ 25  classification  400 non-null    object 
+dtypes: float64(11), int64(1), object(14)
+memory usage: 81.4+ KB
+DATA PREPROCESSING
+
+df['pcv'].value_counts()
+41      21
+52      21
+44      19
+48      19
+40      16
+43      14
+42      13
+45      13
+32      12
+36      12
+33      12
+50      12
+28      12
+34      11
+37      11
+30       9
+29       9
+35       9
+46       9
+31       8
+24       7
+39       7
+26       6
+38       5
+53       4
+51       4
+49       4
+47       4
+54       4
+25       3
+27       3
+22       3
+19       2
+23       2
+15       1
+21       1
+17       1
+20       1
+\t43     1
+18       1
+9        1
+14       1
+\t?      1
+16       1
+Name: pcv, dtype: int64
+df['wc'].value_counts()
+9800     11
+6700     10
+9200      9
+9600      9
+7200      9
+         ..
+19100     1
+\t?       1
+12300     1
+14900     1
+12700     1
+Name: wc, Length: 92, dtype: int64
+df['rc'].value_counts()
+5.2    18
+4.5    16
+4.9    14
+4.7    11
+4.8    10
+3.9    10
+4.6     9
+3.4     9
+5.9     8
+5.5     8
+6.1     8
+5.0     8
+3.7     8
+5.3     7
+5.8     7
+5.4     7
+3.8     7
+5.6     6
+4.3     6
+4.2     6
+3.2     5
+4.4     5
+5.7     5
+6.4     5
+5.1     5
+6.2     5
+6.5     5
+4.1     5
+3.6     4
+6.3     4
+6.0     4
+4.0     3
+3.3     3
+4       3
+3.5     3
+2.9     2
+3.1     2
+2.6     2
+2.1     2
+2.5     2
+2.8     2
+3.0     2
+2.7     2
+5       2
+2.3     1
+\t?     1
+2.4     1
+3       1
+8.0     1
+Name: rc, dtype: int64
+df['dm'].value_counts()
+no       258
+yes      134
+\tno       3
+\tyes      2
+ yes       1
+Name: dm, dtype: int64
+df['cad'].value_counts()
+no      362
+yes      34
+\tno      2
+Name: cad, dtype: int64
+df['classification'].value_counts()
+ckd       248
+notckd    150
+ckd\t       2
+Name: classification, dtype: int64
+df['pcv']=df['pcv'].apply(lambda x:x if type(x)==type(3.5) else x.replace('\t43','43').replace('\t?','Nan'))
+
+# cleaning "WC"
+df['wc']=df['wc'].apply(lambda x:x if type(x)==type(3.5) else x.replace('\t?','Nan').replace('\t6200','6200').replace('\t8400','8400'))
+
+# cleaning "RC"
+df['rc']=df['rc'].apply(lambda x:x if type(x)==type(3.5) else x.replace('\t?','Nan'))
+
+# cleaning "dm"
+df['dm']=df['dm'].apply(lambda x:x if type(x)==type(3.5) else x.replace('\tno','no').replace('\tyes','yes').replace(' yes','yes'))
+
+# cleaning "CAD"
+df['cad']=df['cad'].apply(lambda x:x if type(x)==type(3.5) else x.replace('\tno','no'))
+
+# cleaning "Classification"
+df['classification']=df['classification'].apply(lambda x:x if type(x)==type(3.5) else x.replace('ckd\t','ckd'))
+#explicitly converting numerical columns 
+mistyped=[['pcv','rc','wc']]
+for i in mistyped:
+    df[i]=df[i].astype('float')
+#categorical columns
+cat_cols=list(df.select_dtypes('object'))
+cat_cols
+['rbc',
+ 'pc',
+ 'pcc',
+ 'ba',
+ 'pcv',
+ 'wc',
+ 'rc',
+ 'htn',
+ 'dm',
+ 'cad',
+ 'appet',
+ 'pe',
+ 'ane',
+ 'classification']
+#numerical columns
+num_cols=list(df.select_dtypes(['int64','float64']))
+num_cols
+['id', 'age', 'bp', 'sg', 'al', 'su', 'bgr', 'bu', 'sc', 'sod', 'pot', 'hemo']
+#handling missing data
+df.isnull().sum().sort_values(ascending=False)
+rbc               152
+rc                130
+wc                105
+pot                88
+sod                87
+pcv                70
+pc                 65
+hemo               52
+su                 49
+sg                 47
+al                 46
+bgr                44
+bu                 19
+sc                 17
+bp                 12
+age                 9
+ba                  4
+pcc                 4
+htn                 2
+dm                  2
+cad                 2
+ane                 1
+appet               1
+pe                  1
+id                  0
+classification      0
+dtype: int64
+df['rbc'].mode()
+0    normal
+dtype: object
+df['pc'].mode()
+0    normal
+dtype: object
+df['pcc'].mode()
+0    notpresent
+dtype: object
+df['ba'].mode()
+0    notpresent
+dtype: object
+df['htn'].mode()
+0    no
+dtype: object
+df['dm'].mode()
+0    no
+dtype: object
+df['cad'].mode()
+0    no
+dtype: object
+df['appet'].mode()
+0    good
+dtype: object
+df['pe'].mode()
+0    no
+dtype: object
+df['ane'].mode()
+0    no
+dtype: object
+FILL MISSING DATA
+
+#filling missing values with mode for categorical attributes
+df['rbc'].fillna('normal',inplace=True)
+df['pc'].fillna('normal',inplace=True)
+df['pcc'].fillna('notpresent',inplace=True)
+df['ba'].fillna('notpresent',inplace=True)
+df['htn'].fillna('no',inplace=True)
+df['dm'].fillna('no',inplace=True)
+df['cad'].fillna('no',inplace=True)
+df['appet'].fillna('good',inplace=True)
+df['pe'].fillna('no',inplace=True)
+df['ane'].fillna('no',inplace=True)
+#filling missing values with median for numerical attributes
+for col in num_cols:
+    df[col]=df[col].fillna(df[col].median())
+DATASET AFTER CLEANING
+
+df.isna().sum().sort_values(ascending=False)
+rbc               152
+rc                130
+wc                105
+pot                88
+sod                87
+pcv                70
+pc                 65
+hemo               52
+su                 49
+sg                 47
+al                 46
+bgr                44
+bu                 19
+sc                 17
+bp                 12
+age                 9
+ba                  4
+pcc                 4
+htn                 2
+dm                  2
+cad                 2
+ane                 1
+appet               1
+pe                  1
+id                  0
+classification      0
+dtype: int64
+df['classification'].unique()
+array(['ckd', 'ckd\t', 'notckd'], dtype=object)
+LABEL ENCODING FOR TARGET ATTRIBUTE
+
+#label encoding for categorical attributes
+df['rbc']=df['rbc'].map({'normal':0,'abnormal':1})
+df['pc']=df['pc'].map({'normal':0,'abnormal':1})
+df['pcc']=df['pcc'].map({'notpresent':0,'present':1})
+df['ba']=df['ba'].map({'notpresent':0,'present':1})
+df['htn']=df['htn'].map({'no':0,'yes':1})
+df['dm']=df['dm'].map({'no':0,'yes':1})
+df['cad']=df['cad'].map({'no':0,'yes':1})
+df['pe']=df['pe'].map({'no':0,'yes':1})
+df['ane']=df['ane'].map({'no':0,'yes':1})
+df['appet']=df['appet'].map({'good':0,'poor':1})
+SPLITTING DATA INTO TRAIN AND TEST
+
+from sklearn.model_selection import train_test_split
+x=df.drop('classification',axis=1)#independent
+y=df['classification']#dependent
+
+X_train,X_test,y_train,y_test=train_test_split(x,y,test_size=0.2,random_state=0)
+print("X_train size {} , X_test size {}".format(X_train.shape,X_test.shape))
+X_train size (320, 25) , X_test size (80, 25)
